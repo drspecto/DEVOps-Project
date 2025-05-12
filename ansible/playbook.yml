@@ -1,0 +1,27 @@
+- hosts: web
+  become: yes
+  tasks:
+    - name: Install Node.js
+      shell: |
+        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+
+    - name: Clone React repo
+      git:
+        repo: 'https://github.com/deshraj-techhub/aws-devops-handson.git'
+        dest: /home/ubuntu/app
+
+    - name: Install npm dependencies
+      shell: npm install
+      args:
+        chdir: /home/ubuntu/app
+
+    - name: Start React App
+      shell: npm run start -- --host 0.0.0.0
+      args:
+        chdir: /home/ubuntu/app
